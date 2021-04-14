@@ -20,6 +20,7 @@ int validarInput(int input);
 int main(void) {
 
 	mostrarMenu();
+	return EXIT_SUCCESS;
 }
 
 /**
@@ -36,8 +37,8 @@ void mostrarMenu(void) {
 	int resultResta;
 	int resultProd;
 	float resultDiv;
-	long resultFact1;
-	long resultFact2;
+	int resultFact1;
+	int resultFact2;
 	int flagOperando1 = 1;
 	int flagOperando2 = 1;
 	do {
@@ -152,17 +153,17 @@ void mostrarMenu(void) {
 			}
 			if (resultFact1 == 0 && resultFact2) {
 				printf(
-						"\ne) El operando A es un numero negativo y El factorial de B es: %ld",
+						"\ne) El operando A es un numero negativo y El factorial de B es: %d",
 						resultFact2);
 			}
 			if (resultFact2 == 0 && resultFact1) {
 				printf(
-						"\ne) El operando B es un numero negativo y El factorial de A es: %ld",
+						"\ne) El operando B es un numero negativo y El factorial de A es: %d",
 						resultFact1);
 			}
 			if (resultFact1 && resultFact2) {
 				printf(
-						"\ne) El factorial de A es: %ld y El factorial de B es: %ld",
+						"\ne) El factorial de A es: %d y El factorial de B es: %d",
 						resultFact1, resultFact2);
 			}
 

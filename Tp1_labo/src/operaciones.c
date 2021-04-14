@@ -69,8 +69,8 @@ int division(int *numA, int *numB, float *resDiv) {
  * @param resFact Direccion de memoria donde se guarda el resultado
  * @return 0 Si se realizó correctamente o 1 si hubo un error
  */
-int factoreo(int num, long *resFact) {
-	long resParcial = num;
+int factoreo(int num, int *resFact) {
+	int resParcial = num;
 	if (resFact != NULL) {
 		while (num > 1) {
 			resParcial *= num - 1;
