@@ -39,8 +39,7 @@ int initEmployees(Employee *list, int len);
  * \param sector int
  * \return int Return (-1) if Error [Invalid length or NULL pointer or without free space] - (0) if Ok
  */
-int addEmployee(Employee *list, int len, int *id, char name[], char lastName[],
-		float salary, int sector);
+int addEmployee(Employee *list, int len, Department *dplist, int dplen,int *id);
 /** \brief find an Employee by Id en returns the index position in array. *
  * \param list Employee*
  * \param len int

@@ -16,7 +16,7 @@
 #include "Menu.h"
 #include "Arrays.h"
 #include "Validations.h"
-#define MAX_EMPLOYEES 1000
+#define MAX_EMPLOYEES 5
 #define OPT_AMOUNT 5
 #define REP_AMOUNT 3
 #define UPD_AMOUNT 5
@@ -88,46 +88,22 @@ int main(void) {
 					&opt, mainOpts, 5, MAX_ATTEMPTS)) {
 				switch (opt) {
 				case '1':
-					initializeChar(auxName, 51);
-					initializeChar(auxLastName, 51);
-					initializeFloat(&auxSalary, 1);
-					initializeInt(&auxDepartmentId, 1);
 					do {
 						clearConsole();
 						printf("\n%50s", "---------- Alta empleado ----------");
-						if (validString("Nombre del Empleado",
-								"Error. El nombre no puede estar vacío o contener numeros",
-								auxName, 51, MAX_ATTEMPTS)
-								&& validString("Apellido del Empleado",
-										"Error. El apellido no puede estar vacío o contener numeros",
-										auxLastName, 51, MAX_ATTEMPTS)
-								&& validFloat("Salario",
-										"Error.Tipo de dato invalido",
-										&auxSalary, 1, 1000000, MAX_ATTEMPTS)) {
-							printDepartments(departments, MAX_DEPARTMENTS);
-							if (validInt("Codigo de sector",
-									"Error.Codigo Invalido", &auxDepartmentId,
-									1, 3,
-									MAX_ATTEMPTS)) {
-								if (!(addEmployee(employees, MAX_EMPLOYEES,
-										&id_employee, auxName, auxLastName,
-										auxSalary, auxDepartmentId))) {
-									validChar(
-											"\nCarga exitosa. Desea cargar otro empleado? s/n",
-											"Error.Opcion invalida", &opt,
-											confim_values, 2, MAX_ATTEMPTS);
-								} else {
-									clearConsole();
-									printf(
-											"\nError. Base de datos completa, debe eliminar un registro antes de cargar uno nuevo");
-									printf(
-											"\n\nPresione una tecla para volver al menu");
-									cleanBuffer();
-									getchar();
-									break;
-								}
-							}
+						if ((!addEmployee(employees, MAX_EMPLOYEES, departments,MAX_DEPARTMENTS, &id_employee))){
+							validChar(
+									"\nCarga exitosa. Desea cargar otro empleado? s/n",
+									"Error.Opcion invalida", &opt,
+									confim_values, 2, MAX_ATTEMPTS);
 						} else {
+							clearConsole();
+							printf(
+									"\nError. Base de datos completa, debe eliminar un registro antes de cargar uno nuevo");
+							printf(
+									"\n\nPresione una tecla para volver al menu");
+							cleanBuffer();
+							getchar();
 							break;
 						}
 					} while (!(opt == 'n'));
