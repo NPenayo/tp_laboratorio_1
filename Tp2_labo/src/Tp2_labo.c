@@ -28,6 +28,26 @@ void cleanBuffer();
 int main(void) {
 	char opt;
 	int id_employee = 0;
+	int auxDepartmentId;
+	char auxName[51];
+	char auxLastName[51];
+	float auxSalary;
+	char confim_values[2];
+	char mainOpts[5];
+	int auxId;
+	int totalEmployees;
+	float avgSalary;
+	float totalSalaries;
+	int auxInt;
+	initializeChar(mainOpts, 5);
+	initializeChar(confim_values, 2);
+	mainOpts[0] = '1';
+	mainOpts[1] = '2';
+	mainOpts[2] = '3';
+	mainOpts[3] = '4';
+	mainOpts[4] = 'x';
+	confim_values[0] = 's';
+	confim_values[1] = 'n';
 	Employee employees[MAX_EMPLOYEES];
 	Department departments[MAX_DEPARTMENTS] = { { 1, "RRHH", 1 }, { 2,
 			"Desarollo", 1 }, { 3, "Soporte", 1 } };
@@ -59,26 +79,6 @@ int main(void) {
 	if (menu != NULL) {
 		do { //Set variables
 
-			int auxDepartmentId;
-			char auxName[51];
-			char auxLastName[51];
-			float auxSalary;
-			char confim_values[2];
-			char mainOpts[5];
-			int auxId;
-			int totalEmployees;
-			float avgSalary;
-			float totalSalaries;
-			int auxInt;
-			initializeChar(mainOpts, 5);
-			initializeChar(confim_values, 2);
-			mainOpts[0] = '1';
-			mainOpts[1] = '2';
-			mainOpts[2] = '3';
-			mainOpts[3] = '4';
-			mainOpts[4] = 'x';
-			confim_values[0] = 's';
-			confim_values[1] = 'n';
 			clearConsole();
 			printf("\n%50s",
 					"-----------------Menu Empleados-----------------");
@@ -91,7 +91,8 @@ int main(void) {
 					do {
 						clearConsole();
 						printf("\n%50s", "---------- Alta empleado ----------");
-						if ((!addEmployee(employees, MAX_EMPLOYEES, departments,MAX_DEPARTMENTS, &id_employee))){
+						if ((!addEmployee(employees, MAX_EMPLOYEES, departments,
+								MAX_DEPARTMENTS, &id_employee))) {
 							validChar(
 									"\nCarga exitosa. Desea cargar otro empleado? s/n",
 									"Error.Opcion invalida", &opt,
