@@ -113,6 +113,24 @@ int main() {
 			}
 
 			break;
+		case 8:
+			if (!ll_isEmpty(employeesList)) {
+				if (!controller_saveAsText(TXT_PATH, employeesList)) {
+					printf("\nNo se guardaron los cambios.");
+				}else{
+					printf("\nSe guardaron los cambios con exito!");
+				}
+			}
+			break;
+		case 9:
+			if (!ll_isEmpty(employeesList)) {
+				if (!controller_saveAsBinary(BIN_PATH, employeesList)) {
+					printf("\nNo se guardaron los cambios.");
+				}else{
+					printf("\nSe guardaron los cambios con exito!");
+				}
+			}
+			break;
 		}
 	} while (option != 10);
 	ll_deleteLinkedList(employeesList);

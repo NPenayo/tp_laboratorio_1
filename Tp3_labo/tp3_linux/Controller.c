@@ -6,7 +6,6 @@
 #include "Employee.h"
 #include "parser.h"
 #include "Validations.h"
-#include "Arrays.h"
 #define MAX_ATTEMPTS 3
 /** \brief Carga los datos de los empleados desde el archivo data.csv (modo texto).
  *
@@ -304,7 +303,7 @@ int controller_sortEmployee(LinkedList *pArrayListEmployee) {
 						Employee *empA = ll_get(pArrayListEmployee, i);
 						Employee *empB = ll_get(pArrayListEmployee, j);
 						employee_getId(empA, &idA);
-						employee_getId(empA, &idB);
+						employee_getId(empB, &idB);
 						if (idA > idB) {
 							ll_set(pArrayListEmployee, i, empB);
 							ll_set(pArrayListEmployee, j, empA);
@@ -324,7 +323,7 @@ int controller_sortEmployee(LinkedList *pArrayListEmployee) {
 						Employee *empA = ll_get(pArrayListEmployee, i);
 						Employee *empB = ll_get(pArrayListEmployee, j);
 						employee_getId(empA, &idA);
-						employee_getId(empA, &idB);
+						employee_getId(empB, &idB);
 						if (idA < idB) {
 							ll_set(pArrayListEmployee, i, empB);
 							ll_set(pArrayListEmployee, j, empA);
@@ -434,7 +433,34 @@ int controller_sortEmployee(LinkedList *pArrayListEmployee) {
  *
  */
 int controller_saveAsText(char *path, LinkedList *pArrayListEmployee) {
-	return 1;
+	int resp = 0;
+	char opt;
+	printf("\n¿Desea guardar los cambios realizados?(s/n): ");
+	__fpurge(stdin);
+	scanf("%c", &opt);
+	if (opt == 's') {
+		FILE *file;
+		file = fopen(path, "w");
+		if (file != NULL) {
+			fprintf(file, "id,nombre,horasTrabajads,sueldo\n");
+			for (int i = 0; i < ll_len(pArrayListEmployee); i++) {
+				Employee *tmp = ll_get(pArrayListEmployee, i);
+				int auxid;
+				char auxName[128];
+				int auxHours;
+				int auxSallary;
+				employee_getId(tmp, &auxid);
+				employee_getNombre(tmp, auxName);
+				employee_getHorasTrabajadas(tmp, &auxHours);
+				employee_getSueldo(tmp, &auxSallary);
+				fprintf(file, "%d,%s,%d,%d\n", auxid, auxName, auxHours,
+						auxSallary);
+			}
+			resp = 1;
+		}
+		fclose(file);
+	}
+	return resp;
 }
 
 /** \brief Guarda los datos de los empleados en el archivo data.csv (modo binario).
@@ -445,6 +471,33 @@ int controller_saveAsText(char *path, LinkedList *pArrayListEmployee) {
  *
  */
 int controller_saveAsBinary(char *path, LinkedList *pArrayListEmployee) {
-	return 1;
+	int resp = 0;
+	char opt;
+	printf("\n¿Desea guardar los cambios realizados?(s/n): ");
+	__fpurge(stdin);
+	scanf("%c", &opt);
+	if (opt == 's') {
+		FILE *file;
+		file = fopen(path, "wb");
+		if (file != NULL) {
+			fprintf(file, "id,nombre,horasTrabajads,sueldo\n");
+			for (int i = 0; i < ll_len(pArrayListEmployee); i++) {
+				Employee *tmp = ll_get(pArrayListEmployee, i);
+				int auxid;
+				char auxName[128];
+				int auxHours;
+				int auxSallary;
+				employee_getId(tmp, &auxid);
+				employee_getNombre(tmp, auxName);
+				employee_getHorasTrabajadas(tmp, &auxHours);
+				employee_getSueldo(tmp, &auxSallary);
+				fprintf(file, "%d,%s,%d,%d\n", auxid, auxName, auxHours,
+						auxSallary);
+			}
+			resp = 1;
+		}
+		fclose(file);
+	}
+	return resp;
 }
 
