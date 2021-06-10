@@ -113,25 +113,23 @@ int controller_editEmployee(LinkedList *pArrayListEmployee) {
 	char auxNombre[128];
 	int auxHoras;
 	int auxSueldo;
-	int auxIndex;
 	int tmpId;
+	Employee *aux;
 	printf("\nID del empleado: ");
 	__fpurge(stdin);
 	scanf("%d", &auxId);
 	for (int i = 0; i < ll_len(pArrayListEmployee); i++) {
-		Employee *aux = ll_get(pArrayListEmployee, i);
+		aux = ll_get(pArrayListEmployee, i);
 		employee_getId(aux, &tmpId);
 		if (tmpId == auxId) {
-			auxIndex = ll_indexOf(pArrayListEmployee, aux);
 			break;
 		}
 	}
-	Employee *temp = ll_get(pArrayListEmployee, auxIndex);
-	if (temp != NULL) {
+	if (aux != NULL) {
 		do {
-			employee_getNombre(temp, auxNombre);
-			employee_getHorasTrabajadas(temp, &auxHoras);
-			employee_getSueldo(temp, &auxSueldo);
+			employee_getNombre(aux, auxNombre);
+			employee_getHorasTrabajadas(aux, &auxHoras);
+			employee_getSueldo(aux, &auxSueldo);
 			printf("\n%50s", "Modificar");
 			printf("\n*1- Nombre: %s", auxNombre);
 			printf("\n*2- Horas trabajadas: %d", auxHoras);
@@ -145,7 +143,7 @@ int controller_editEmployee(LinkedList *pArrayListEmployee) {
 					if (validString("Nuevo nombre",
 							"Error.El nombre no puede estar vacio o contener numeros.",
 							auxNombre, 128, MAX_ATTEMPTS)) {
-						employee_setNombre(temp, auxNombre);
+						employee_setNombre(aux, auxNombre);
 						resp = 1;
 					}
 					break;
@@ -154,14 +152,14 @@ int controller_editEmployee(LinkedList *pArrayListEmployee) {
 							"Error.Cantidad de horas invalidas", &auxHoras, 1,
 							325,
 							MAX_ATTEMPTS)) {
-						employee_setHorasTrabajadas(temp, auxHoras);
+						employee_setHorasTrabajadas(aux, auxHoras);
 						resp = 1;
 					}
 					break;
 				case 3:
 					if (validInt("Sueldo del empleado", "Error.Sueldo invalido",
 							&auxSueldo, 10000, 50000, MAX_ATTEMPTS)) {
-						employee_setSueldo(temp, auxSueldo);
+						employee_setSueldo(aux, auxSueldo);
 						resp = 1;
 					}
 					break;
@@ -212,12 +210,11 @@ int controller_removeEmployee(LinkedList *pArrayListEmployee) {
 		__fpurge(stdin);
 		scanf("%c", &confirm);
 		if (confirm == 's') {
-			employee_delete(temp);
 			ll_remove(pArrayListEmployee, auxIndex);
+			employee_delete(temp);
 			resp = 1;
 		}
 	}
-
 	return resp;
 }
 
