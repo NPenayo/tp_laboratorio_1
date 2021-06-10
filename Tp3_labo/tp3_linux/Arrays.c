@@ -94,39 +94,6 @@ void swapString(char arr[][STRING_LENGTH], int arrLength, int a, int b) {
 	strcpy(&arr[b][STRING_LENGTH], aux[0]);
 
 }
-int quickSort(void*A,void*B){
-
-}
-/*void quicksortIntAsc(int *A, int izq, int der) {
-	if (der - izq > 1) {
-		{
-			int centro = (izq + der) / 2;
-			if (A[izq] > A[centro]) {
-
-			}
-			swapInt(A, izq, centro);
-			if (A[izq] > A[der])
-				swapInt(A, izq, der);
-			if (A[centro] > A[der])
-				swapInt(A, centro, der);
-			swapInt(A, centro, der - 1);
-		}
-		{
-			int i = izq, j = der - 1;
-			int pivote = A[der - 1];
-			do {
-				do
-					i++;
-				while (A[i] < pivote);
-				do
-					j--;
-				while (A[j] > pivote);
-				swapInt(A, i, j);
-			} while (j > i);
-		}
-	}
-}
-
 void quicksortFloatAsc(float *A, int izq, int der) {
 	if (der - izq > 1) {
 		{
@@ -185,4 +152,4 @@ void quicksortCharAsc(char *A, int izq, int der) {
 			} while (j > i);
 		}
 	}
-}*/
+}

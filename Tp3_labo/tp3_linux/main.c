@@ -24,6 +24,7 @@ void clearConsole();
 void cleanBuffer();
 int main() {
 	int option = 0;
+	char confirm;
 	LinkedList *employeesList = ll_newLinkedList();
 	do {
 		clearConsole();
@@ -43,7 +44,6 @@ int main() {
 		switch (option) {
 		case 1:
 			clearConsole();
-			ll_clear(employeesList);
 			if (!controller_loadFromText(TXT_PATH, employeesList)) {
 				printf("\nHubo un error al leer el archivo.");
 			} else {
@@ -52,7 +52,6 @@ int main() {
 			break;
 		case 2:
 			clearConsole();
-			ll_clear(employeesList);
 			if (!controller_loadFromBinary(BIN_PATH, employeesList)) {
 				printf("\nHubo un error al leer el archivo.");
 			} else {
@@ -114,24 +113,26 @@ int main() {
 			break;
 		case 8:
 			if (!ll_isEmpty(employeesList)) {
-				if (!controller_saveAsText(TXT_PATH, employeesList)) {
-					printf("\nNo se guardaron los cambios.");
-				} else {
-					printf("\nSe guardaron los cambios con exito!");
+				printf("\n¿Desea guardar los cambios realizados?(s/n): ");
+				cleanBuffer();
+				scanf("%c", &confirm);
+				if (confirm == 's') {
+					controller_saveAsText(TXT_PATH, employeesList);
 				}
 			} else {
-				printf("\nNo hay registros cargados para guardar");
+				printf("\nNo hay registros cargados");
 			}
 			break;
 		case 9:
 			if (!ll_isEmpty(employeesList)) {
-				if (!controller_saveAsBinary(BIN_PATH, employeesList)) {
-					printf("\nNo se guardaron los cambios.");
-				} else {
-					printf("\nSe guardaron los cambios con exito!");
+				printf("\n¿Desea guardar los cambios realizados?(s/n): ");
+				cleanBuffer();
+				scanf("%c", &confirm);
+				if (confirm == 's') {
+					controller_saveAsBinary(BIN_PATH, employeesList);
 				}
 			} else {
-				printf("\nNo hay registros cargados");
+				printf("\nNo hay nada que guardar");
 			}
 			break;
 		}

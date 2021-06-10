@@ -22,7 +22,7 @@ int parser_EmployeeFromText(FILE *pFile, LinkedList *pArrayListEmployee) {
 		registers++;
 		auxEmp = employee_newParametros(*(buffer + 0), *(buffer + 1),
 				*(buffer + 2), *(buffer + 3));
-		ll_add(pArrayListEmployee, (Employee*) auxEmp);
+		ll_add(pArrayListEmployee, auxEmp);
 
 	}
 
@@ -40,14 +40,13 @@ int parser_EmployeeFromBinary(FILE *pFile, LinkedList *pArrayListEmployee) {
 	int registers = 0;
 	Employee auxEmp;
 	while (!feof(pFile)) {
-
 		if (fread(&auxEmp, sizeof(Employee), 1, pFile) == 1) {
 			Employee *temp = employee_new();
 			employee_setId(temp, auxEmp.id);
 			employee_setNombre(temp, auxEmp.nombre);
 			employee_setHorasTrabajadas(temp, auxEmp.horasTrabajadas);
 			employee_setSueldo(temp, auxEmp.sueldo);
-			ll_add(pArrayListEmployee, (Employee*) temp);
+			ll_add(pArrayListEmployee,temp);
 		}
 		registers++;
 	}

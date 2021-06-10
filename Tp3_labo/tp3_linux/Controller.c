@@ -7,52 +7,6 @@
 #include "parser.h"
 #include "Validations.h"
 #define MAX_ATTEMPTS 3
-/** \brief Carga los datos de los empleados desde el archivo data.csv (modo texto).
- *
- * \param path char*
- * \param pArrayListEmployee LinkedList*
- * \return int
- *
- */
-int controller_loadFromText(char *path, LinkedList *pArrayListEmployee) {
-	int resp = 0;
-	int registers;
-	FILE *file;
-	file = fopen(path, "r");
-	if (file != NULL) {
-		registers = parser_EmployeeFromText(file, pArrayListEmployee);
-		if (registers) {
-			resp = 1;
-			fclose(file);
-		}
-
-	}
-
-	return resp;
-}
-
-/** \brief Carga los datos de los empleados desde el archivo data.csv (modo binario).
- *
- * \param path char*
- * \param pArrayListEmployee LinkedList*
- * \return int
- *
- */
-int controller_loadFromBinary(char *path, LinkedList *pArrayListEmployee) {
-	int resp = 0;
-	int registers;
-	FILE *file;
-	file = fopen(path, "rb");
-	if (file != NULL) {
-		registers = parser_EmployeeFromBinary(file, pArrayListEmployee);
-		if (registers) {
-			resp = 1;
-			fclose(file);
-		}
-
-	}
-	return resp;
-}
 
 /** \brief Alta de empleados
  *
@@ -463,33 +417,29 @@ int controller_sortEmployee(LinkedList *pArrayListEmployee) {
  */
 int controller_saveAsText(char *path, LinkedList *pArrayListEmployee) {
 	int resp = 0;
-	char opt;
-	printf("\n¿Desea guardar los cambios realizados?(s/n): ");
-	__fpurge(stdin);
-	scanf("%c", &opt);
-	if (opt == 's') {
-		FILE *file;
-		file = fopen(path, "w");
-		if (file != NULL) {
-			fprintf(file, "id,nombre,horasTrabajads,sueldo\n");
-			for (int i = 0; i < ll_len(pArrayListEmployee); i++) {
-				Employee *tmp = ll_get(pArrayListEmployee, i);
-				int auxid;
-				char auxName[128];
-				int auxHours;
-				int auxSallary;
-				employee_getId(tmp, &auxid);
-				employee_getNombre(tmp, auxName);
-				employee_getHorasTrabajadas(tmp, &auxHours);
-				employee_getSueldo(tmp, &auxSallary);
-				fprintf(file, "%d,%s,%d,%d\n", auxid, auxName, auxHours,
-						auxSallary);
+	FILE *file;
+	file = fopen(path, "w");
+	if (file != NULL && ll_isEmpty(pArrayListEmployee)) {
 
-			}
-			resp = 1;
+		fprintf(file, "id,nombre,horasTrabajads,sueldo\n");
+		for (int i = 0; i < ll_len(pArrayListEmployee); i++) {
+			Employee *tmp = ll_get(pArrayListEmployee, i);
+			int auxid;
+			char auxName[128];
+			int auxHours;
+			int auxSallary;
+			employee_getId(tmp, &auxid);
+			employee_getNombre(tmp, auxName);
+			employee_getHorasTrabajadas(tmp, &auxHours);
+			employee_getSueldo(tmp, &auxSallary);
+			fprintf(file, "%d,%s,%d,%d\n", auxid, auxName, auxHours,
+					auxSallary);
+
 		}
+		resp = 1;
 		fclose(file);
 	}
+
 	return resp;
 }
 
@@ -502,27 +452,112 @@ int controller_saveAsText(char *path, LinkedList *pArrayListEmployee) {
  */
 int controller_saveAsBinary(char *path, LinkedList *pArrayListEmployee) {
 	int resp = 0;
-	char opt;
-	printf("\n¿Desea guardar los cambios realizados?(s/n): ");
-	__fpurge(stdin);
-	scanf("%c", &opt);
-	if (opt == 's') {
-		FILE *file;
-		file = fopen(path, "wb");
-		if (file != NULL) {
-			for (int i = 0; i < ll_len(pArrayListEmployee); i++) {
-				Employee *tmp = ll_get(pArrayListEmployee, i);
-				if (tmp != NULL) {
-					Employee aux = *(tmp);
-					fwrite(&aux, sizeof(Employee), 1, file);
+	FILE *file;
+	file = fopen(path, "wb");
+	if (file != NULL && ll_isEmpty(pArrayListEmployee)) {
 
+		for (int i = 0; i < ll_len(pArrayListEmployee); i++) {
+			Employee *tmp = ll_get(pArrayListEmployee, i);
+			if (tmp != NULL) {
+				Employee aux = *(tmp);
+
+				fwrite(&aux, sizeof(Employee), 1, file);
+
+			}
+
+		}
+		resp = 1;
+		fclose(file);
+	}
+
+	return resp;
+}
+/** \brief Carga los datos de los empleados desde el archivo data.csv (modo texto).
+ *
+ * \param path char*
+ * \param pArrayListEmployee LinkedList*
+ * \return int
+ *
+ */
+int controller_loadFromText(char *path, LinkedList *pArrayListEmployee) {
+	int resp = 0;
+	int registers;
+	char confirm;
+	FILE *file;
+	if (!ll_isEmpty(pArrayListEmployee)) {
+
+		printf("\nDesea guardar los datos ya cargados?(s/n)");
+		__fpurge(stdin);
+		scanf("%c", &confirm);
+		if (confirm == 's') {
+			controller_saveAsText("./Backup.csv", pArrayListEmployee);
+			ll_clear(pArrayListEmployee);
+			file = fopen(path, "r");
+			if (file != NULL) {
+				registers = parser_EmployeeFromText(file, pArrayListEmployee);
+				if (registers) {
+					resp = 1;
+					fclose(file);
 				}
 
 			}
-			resp = 1;
 		}
-		fclose(file);
+
+	} else {
+		file = fopen(path, "r");
+		if (file != NULL) {
+			registers = parser_EmployeeFromText(file, pArrayListEmployee);
+			if (registers) {
+				resp = 1;
+				fclose(file);
+			}
+
+		}
 	}
+
 	return resp;
 }
 
+/** \brief Carga los datos de los empleados desde el archivo data.csv (modo binario).
+ *
+ * \param path char*
+ * \param pArrayListEmployee LinkedList*
+ * \return int
+ *
+ */
+int controller_loadFromBinary(char *path, LinkedList *pArrayListEmployee) {
+	int resp = 0;
+	int registers;
+	char confirm;
+	FILE *file;
+	if (!ll_isEmpty(pArrayListEmployee)) {
+		printf("\nDesea guardar los datos ya cargados?(s/n)");
+		__fpurge(stdin);
+		scanf("%c", &confirm);
+		if (confirm == 's') {
+			controller_saveAsBinary("./Backup.bin", pArrayListEmployee);
+			ll_clear(pArrayListEmployee);
+			file = fopen(path, "rb");
+			if (file != NULL) {
+				registers = parser_EmployeeFromBinary(file, pArrayListEmployee);
+				if (registers) {
+					resp = 1;
+					fclose(file);
+				}
+
+			}
+		}
+	} else {
+		file = fopen(path, "rb");
+		if (file != NULL) {
+			registers = parser_EmployeeFromBinary(file, pArrayListEmployee);
+			if (registers) {
+				resp = 1;
+				fclose(file);
+			}
+
+		}
+	}
+
+	return resp;
+}
