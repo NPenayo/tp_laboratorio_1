@@ -22,12 +22,12 @@ int controller_loadFromText(char *path, LinkedList *pArrayListEmployee) {
 	if (file != NULL) {
 		registers = parser_EmployeeFromText(file, pArrayListEmployee);
 		if (registers) {
-			printf("\nSe cargaron %d registros del archivo", registers);
 			resp = 1;
+			fclose(file);
 		}
 
 	}
-	fclose(file);
+
 	return resp;
 }
 
@@ -46,12 +46,11 @@ int controller_loadFromBinary(char *path, LinkedList *pArrayListEmployee) {
 	if (file != NULL) {
 		registers = parser_EmployeeFromBinary(file, pArrayListEmployee);
 		if (registers) {
-			printf("\nSe cargaron %d registros del archivo", registers);
 			resp = 1;
+			fclose(file);
 		}
 
 	}
-	fclose(file);
 	return resp;
 }
 
@@ -67,14 +66,18 @@ int controller_addEmployee(LinkedList *pArrayListEmployee) {
 	char auxNombre[128];
 	int auxHoras;
 	int auxSueldo;
-	int lastId = 0;
-	for (int i = 0; i < ll_len(pArrayListEmployee); i++) {
-		Employee *tmp = ll_get(pArrayListEmployee, i);
-		if ((*tmp).id > lastId) {
-			lastId = (*tmp).id;
+	int lastId = 1;
+	if (!ll_isEmpty(pArrayListEmployee)) {
+		for (int i = 0; i < ll_len(pArrayListEmployee); i++) {
+			Employee *tmp = ll_get(pArrayListEmployee, i);
+			int tmpId;
+			employee_getId(tmp, &tmpId);
+			if (tmpId > lastId) {
+				employee_getId(tmp, &lastId);
+			}
 		}
+		lastId++;
 	}
-	lastId++;
 	Employee *newEmp = employee_new();
 	if (newEmp != NULL) {
 		if (validString("Nombre del empleado",
@@ -166,25 +169,42 @@ int controller_editEmployee(LinkedList *pArrayListEmployee) {
 int controller_removeEmployee(LinkedList *pArrayListEmployee) {
 	int resp = 0;
 	int auxId;
+	char auxNombre[128];
+	int auxHoras;
+	int auxSueldo;
+	int tmpId;
+	int auxIndex;
 	char confirm;
+	Employee *temp = employee_new();
 	printf("\nID del empleado: ");
 	__fpurge(stdin);
 	scanf("%d", &auxId);
-	Employee *temp = ll_get(pArrayListEmployee, auxId - 1);
+	for (int i = 0; i < ll_len(pArrayListEmployee); i++) {
+		temp = ll_get(pArrayListEmployee, i);
+		employee_getId(temp, &tmpId);
+		if (tmpId == auxId) {
+			auxIndex = ll_indexOf(pArrayListEmployee, temp);
+			break;
+		}
+	}
 	if (temp != NULL) {
+		employee_getNombre(temp, auxNombre);
+		employee_getHorasTrabajadas(temp, &auxHoras);
+		employee_getSueldo(temp, &auxSueldo);
 		printf("\n¿Seguro que desea eliminar el siguiente empleado?");
-		printf("\n*Nombre: %s", (*temp).nombre);
-		printf("\n*Horas trabajadas: %d", (*temp).horasTrabajadas);
-		printf("\n*Sueldo: %d", (*temp).sueldo);
+		printf("\n*Nombre: %s", auxNombre);
+		printf("\n*Horas trabajadas: %d", auxHoras);
+		printf("\n*Sueldo: %d", auxSueldo);
 		printf("\n\nConfirmar(s/n): ");
 		__fpurge(stdin);
 		scanf("%c", &confirm);
 		if (confirm == 's') {
-			ll_remove(pArrayListEmployee, auxId - 1);
 			employee_delete(temp);
+			ll_remove(pArrayListEmployee, auxIndex);
 			resp = 1;
 		}
 	}
+
 	return resp;
 }
 
@@ -473,6 +493,7 @@ int controller_saveAsText(char *path, LinkedList *pArrayListEmployee) {
 int controller_saveAsBinary(char *path, LinkedList *pArrayListEmployee) {
 	int resp = 0;
 	char opt;
+	int a = 0;
 	printf("\n¿Desea guardar los cambios realizados?(s/n): ");
 	__fpurge(stdin);
 	scanf("%c", &opt);
@@ -480,19 +501,14 @@ int controller_saveAsBinary(char *path, LinkedList *pArrayListEmployee) {
 		FILE *file;
 		file = fopen(path, "wb");
 		if (file != NULL) {
-			fprintf(file, "id,nombre,horasTrabajads,sueldo\n");
 			for (int i = 0; i < ll_len(pArrayListEmployee); i++) {
 				Employee *tmp = ll_get(pArrayListEmployee, i);
-				int auxid;
-				char auxName[128];
-				int auxHours;
-				int auxSallary;
-				employee_getId(tmp, &auxid);
-				employee_getNombre(tmp, auxName);
-				employee_getHorasTrabajadas(tmp, &auxHours);
-				employee_getSueldo(tmp, &auxSallary);
-				fprintf(file, "%d,%s,%d,%d\n", auxid, auxName, auxHours,
-						auxSallary);
+				if (tmp != NULL) {
+					Employee aux = *(tmp);
+					fwrite(&aux, sizeof(Employee), 1, file);
+					a++;
+				}
+
 			}
 			resp = 1;
 		}

@@ -24,9 +24,6 @@ void clearConsole();
 void cleanBuffer();
 int main() {
 	int option = 0;
-
-	// FILE *text;
-	//FILE *bin;
 	LinkedList *employeesList = ll_newLinkedList();
 	do {
 		clearConsole();
@@ -49,6 +46,8 @@ int main() {
 			ll_clear(employeesList);
 			if (!controller_loadFromText(TXT_PATH, employeesList)) {
 				printf("\nHubo un error al leer el archivo.");
+			} else {
+				printf("\nArchivo cargado con exito");
 			}
 			break;
 		case 2:
@@ -56,20 +55,20 @@ int main() {
 			ll_clear(employeesList);
 			if (!controller_loadFromBinary(BIN_PATH, employeesList)) {
 				printf("\nHubo un error al leer el archivo.");
+			} else {
+				printf("\nArchivo cargado con exito");
 			}
 			break;
 		case 3:
-			if (!ll_isEmpty(employeesList)) {
-				clearConsole();
-				printf("\n%50s", "Alta de empleado");
-				if (controller_addEmployee(employeesList)) {
-					printf("\nAlta exitosa");
-				} else {
-					printf("\nHubo un error al dar el alta");
-				}
+
+			clearConsole();
+			printf("\n%50s", "Alta de empleado");
+			if (controller_addEmployee(employeesList)) {
+				printf("\nAlta exitosa");
 			} else {
-				printf("\nPrimero debe cargar los datos desde un archivo");
+				printf("\nHubo un error al dar el alta");
 			}
+
 			break;
 		case 4:
 			if (!ll_isEmpty(employeesList)) {
@@ -80,7 +79,7 @@ int main() {
 							"\nEl ID ingresado no corresponde a un empleado registrado");
 				}
 			} else {
-				printf("\nPrimero debe cargar los datos desde un archivo");
+				printf("\nNo hay registros cargados");
 			}
 
 			break;
@@ -95,7 +94,7 @@ int main() {
 					printf("\nSe elimino exitosamente");
 				}
 			} else {
-				printf("\nPrimero debe cargar los datos desde un archivo");
+				printf("\nNo hay registros cargados");
 			}
 			break;
 		case 6:
@@ -117,18 +116,22 @@ int main() {
 			if (!ll_isEmpty(employeesList)) {
 				if (!controller_saveAsText(TXT_PATH, employeesList)) {
 					printf("\nNo se guardaron los cambios.");
-				}else{
+				} else {
 					printf("\nSe guardaron los cambios con exito!");
 				}
+			} else {
+				printf("\nNo hay registros cargados para guardar");
 			}
 			break;
 		case 9:
 			if (!ll_isEmpty(employeesList)) {
 				if (!controller_saveAsBinary(BIN_PATH, employeesList)) {
 					printf("\nNo se guardaron los cambios.");
-				}else{
+				} else {
 					printf("\nSe guardaron los cambios con exito!");
 				}
+			} else {
+				printf("\nNo hay registros cargados");
 			}
 			break;
 		}
