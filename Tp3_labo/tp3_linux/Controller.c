@@ -113,16 +113,29 @@ int controller_editEmployee(LinkedList *pArrayListEmployee) {
 	char auxNombre[128];
 	int auxHoras;
 	int auxSueldo;
+	int auxIndex;
+	int tmpId;
 	printf("\nID del empleado: ");
 	__fpurge(stdin);
 	scanf("%d", &auxId);
-	Employee *temp = ll_get(pArrayListEmployee, auxId);
+	for (int i = 0; i < ll_len(pArrayListEmployee); i++) {
+		Employee *aux = ll_get(pArrayListEmployee, i);
+		employee_getId(aux, &tmpId);
+		if (tmpId == auxId) {
+			auxIndex = ll_indexOf(pArrayListEmployee, aux);
+			break;
+		}
+	}
+	Employee *temp = ll_get(pArrayListEmployee, auxIndex);
 	if (temp != NULL) {
 		do {
+			employee_getNombre(temp, auxNombre);
+			employee_getHorasTrabajadas(temp, &auxHoras);
+			employee_getSueldo(temp, &auxSueldo);
 			printf("\n%50s", "Modificar");
-			printf("\n*1- Nombre: %s", (*temp).nombre);
-			printf("\n*2- Horas trabajadas: %d", (*temp).horasTrabajadas);
-			printf("\n*3- Sueldo: %d", (*temp).sueldo);
+			printf("\n*1- Nombre: %s", auxNombre);
+			printf("\n*2- Horas trabajadas: %d", auxHoras);
+			printf("\n*3- Sueldo: %d", auxSueldo);
 			printf("\n*4- Salir");
 			__fpurge(stdin);
 			if (validInt("Opcion", "Error.Opcion incorrecta", &option, 1, 4,
@@ -175,7 +188,7 @@ int controller_removeEmployee(LinkedList *pArrayListEmployee) {
 	int tmpId;
 	int auxIndex;
 	char confirm;
-	Employee *temp = employee_new();
+	Employee *temp;
 	printf("\nID del empleado: ");
 	__fpurge(stdin);
 	scanf("%d", &auxId);
@@ -222,13 +235,12 @@ int controller_ListEmployee(LinkedList *pArrayListEmployee) {
 	int auxHoras;
 	int auxSueldo;
 	if (!ll_isEmpty(pArrayListEmployee)) {
-		int llLens = ll_len(pArrayListEmployee);
 		printf("\n%50s", "Listado de empleados");
 		printf("\n\n%5s %2c %-10s %2c %18s %3c %14s", "ID", '|', "Nombre", '|',
 				"Horas Trabajadas", '|', "Sueldo");
 		printf(
 				"\n ------------------------------------------------------------------------");
-		for (int i = 0; i < llLens; i++) {
+		for (int i = 0; i < ll_len(pArrayListEmployee); i++) {
 
 			Employee *tmp = ll_get(pArrayListEmployee, i);
 
@@ -475,6 +487,7 @@ int controller_saveAsText(char *path, LinkedList *pArrayListEmployee) {
 				employee_getSueldo(tmp, &auxSallary);
 				fprintf(file, "%d,%s,%d,%d\n", auxid, auxName, auxHours,
 						auxSallary);
+
 			}
 			resp = 1;
 		}
@@ -493,7 +506,6 @@ int controller_saveAsText(char *path, LinkedList *pArrayListEmployee) {
 int controller_saveAsBinary(char *path, LinkedList *pArrayListEmployee) {
 	int resp = 0;
 	char opt;
-	int a = 0;
 	printf("\n¿Desea guardar los cambios realizados?(s/n): ");
 	__fpurge(stdin);
 	scanf("%c", &opt);
@@ -506,7 +518,7 @@ int controller_saveAsBinary(char *path, LinkedList *pArrayListEmployee) {
 				if (tmp != NULL) {
 					Employee aux = *(tmp);
 					fwrite(&aux, sizeof(Employee), 1, file);
-					a++;
+
 				}
 
 			}
