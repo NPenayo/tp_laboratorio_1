@@ -46,7 +46,7 @@ int parser_EmployeeFromBinary(FILE *pFile, LinkedList *pArrayListEmployee) {
 			employee_setNombre(temp, auxEmp.nombre);
 			employee_setHorasTrabajadas(temp, auxEmp.horasTrabajadas);
 			employee_setSueldo(temp, auxEmp.sueldo);
-			ll_add(pArrayListEmployee,temp);
+			ll_add(pArrayListEmployee,(Employee*)temp);
 		}
 		registers++;
 	}

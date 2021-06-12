@@ -419,7 +419,7 @@ int controller_saveAsText(char *path, LinkedList *pArrayListEmployee) {
 	int resp = 0;
 	FILE *file;
 	file = fopen(path, "w");
-	if (file != NULL && ll_isEmpty(pArrayListEmployee)) {
+	if (file != NULL && !ll_isEmpty(pArrayListEmployee)) {
 
 		fprintf(file, "id,nombre,horasTrabajads,sueldo\n");
 		for (int i = 0; i < ll_len(pArrayListEmployee); i++) {
@@ -437,9 +437,9 @@ int controller_saveAsText(char *path, LinkedList *pArrayListEmployee) {
 
 		}
 		resp = 1;
-		fclose(file);
-	}
 
+	}
+	fclose(file);
 	return resp;
 }
 
@@ -454,7 +454,7 @@ int controller_saveAsBinary(char *path, LinkedList *pArrayListEmployee) {
 	int resp = 0;
 	FILE *file;
 	file = fopen(path, "wb");
-	if (file != NULL && ll_isEmpty(pArrayListEmployee)) {
+	if (file != NULL && !ll_isEmpty(pArrayListEmployee)) {
 
 		for (int i = 0; i < ll_len(pArrayListEmployee); i++) {
 			Employee *tmp = ll_get(pArrayListEmployee, i);
@@ -467,9 +467,9 @@ int controller_saveAsBinary(char *path, LinkedList *pArrayListEmployee) {
 
 		}
 		resp = 1;
-		fclose(file);
-	}
 
+	}
+	fclose(file);
 	return resp;
 }
 /** \brief Carga los datos de los empleados desde el archivo data.csv (modo texto).
@@ -490,14 +490,25 @@ int controller_loadFromText(char *path, LinkedList *pArrayListEmployee) {
 		__fpurge(stdin);
 		scanf("%c", &confirm);
 		if (confirm == 's') {
-			controller_saveAsText("./Backup.csv", pArrayListEmployee);
+			controller_saveAsText("./backup.csv", pArrayListEmployee);
 			ll_clear(pArrayListEmployee);
 			file = fopen(path, "r");
 			if (file != NULL) {
 				registers = parser_EmployeeFromText(file, pArrayListEmployee);
 				if (registers) {
 					resp = 1;
-					fclose(file);
+
+				}
+
+			}
+		} else {
+			ll_clear(pArrayListEmployee);
+			file = fopen(path, "r");
+			if (file != NULL) {
+				registers = parser_EmployeeFromText(file, pArrayListEmployee);
+				if (registers) {
+					resp = 1;
+
 				}
 
 			}
@@ -509,12 +520,12 @@ int controller_loadFromText(char *path, LinkedList *pArrayListEmployee) {
 			registers = parser_EmployeeFromText(file, pArrayListEmployee);
 			if (registers) {
 				resp = 1;
-				fclose(file);
+
 			}
 
 		}
 	}
-
+	fclose(file);
 	return resp;
 }
 
@@ -535,29 +546,30 @@ int controller_loadFromBinary(char *path, LinkedList *pArrayListEmployee) {
 		__fpurge(stdin);
 		scanf("%c", &confirm);
 		if (confirm == 's') {
-			controller_saveAsBinary("./Backup.bin", pArrayListEmployee);
+			controller_saveAsBinary("./backup.bin", pArrayListEmployee);
 			ll_clear(pArrayListEmployee);
 			file = fopen(path, "rb");
 			if (file != NULL) {
 				registers = parser_EmployeeFromBinary(file, pArrayListEmployee);
 				if (registers) {
 					resp = 1;
-					fclose(file);
 				}
 
 			}
-		}
-	} else {
-		file = fopen(path, "rb");
-		if (file != NULL) {
-			registers = parser_EmployeeFromBinary(file, pArrayListEmployee);
-			if (registers) {
-				resp = 1;
-				fclose(file);
+		} else {
+			file = fopen(path, "rb");
+			if (file != NULL) {
+				registers = parser_EmployeeFromBinary(file, pArrayListEmployee);
+				if (registers) {
+					resp = 1;
+
+				}
+
 			}
 
 		}
-	}
+		fclose(file);
 
+	}
 	return resp;
 }
