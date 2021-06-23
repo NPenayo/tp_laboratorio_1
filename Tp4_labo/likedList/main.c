@@ -39,7 +39,8 @@ int main() {
 		printf("\n*7- Ordenar empleados");
 		printf("\n*8- Guardar datos de empleados en archivo (texto)");
 		printf("\n*9- Guardar datos de empleados en archivo (binario)");
-		printf("\n*10- Salir");
+		printf("\n*10-Aumentar sueldos mayores a 2000");
+		printf("\n*11- Salir");
 		printf("\n\nOpcion: ");
 		scanf("%d", &option);
 		switch (option) {
@@ -113,6 +114,7 @@ int main() {
 
 			break;
 		case 8:
+			clearConsole();
 			if (!ll_isEmpty(employeesList)) {
 				printf("\n¿Desea guardar los cambios realizados?(s/n): ");
 				cleanBuffer();
@@ -125,6 +127,7 @@ int main() {
 			}
 			break;
 		case 9:
+			clearConsole();
 			if (!ll_isEmpty(employeesList)) {
 				printf("\n¿Desea guardar los cambios realizados?(s/n): ");
 				cleanBuffer();
@@ -136,8 +139,19 @@ int main() {
 				printf("\nNo hay nada que guardar");
 			}
 			break;
+		case 10:
+			clearConsole();
+			if(!ll_isEmpty(employeesList)){
+				printf("\nAumentar sueldos mayores a 2000?(s/n)");
+				cleanBuffer();
+				scanf("%c", &confirm);
+				if(confirm == 's'){
+					controller_map(employeesList);
+				}
+			}
+			break;
 		}
-	} while (option != 10);
+	} while (option != 11);
 	ll_deleteLinkedList(employeesList);
 	return 0;
 }
@@ -155,5 +169,4 @@ void cleanBuffer() {
 	fflush(stdin);
 #endif
 }
-
 

@@ -569,6 +569,29 @@ int controller_loadFromBinary(char *path, LinkedList *pArrayListEmployee) {
 
 		}
 
+	} else {
+		file = fopen(path, "rb");
+		if (file != NULL) {
+			registers = parser_EmployeeFromBinary(file, pArrayListEmployee);
+			if (registers) {
+				resp = 1;
+
+			}
+			fclose(file);
+		}
+
+	}
+	return resp;
+}
+int controller_map(LinkedList *pArrayListEmployee) {
+	int resp = 0;
+	LinkedList *mapped = NULL;
+	if (pArrayListEmployee != NULL) {
+		mapped = ll_map(pArrayListEmployee, employee_increaseSalary);
+		if (mapped != NULL) {
+			controller_saveAsText("Mapped.csv", mapped);
+			ll_deleteLinkedList(mapped);
+		}
 	}
 	return resp;
 }

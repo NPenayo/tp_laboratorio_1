@@ -55,3 +55,10 @@ int employee_getSueldo(Employee *this, int *sueldo) {
 	*sueldo = this->sueldo;
 	return 1;
 }
+void employee_increaseSalary(void *this) {
+	if (this != NULL) {
+		if ((*(Employee*) this).sueldo > 20000) {
+			employee_setSueldo(this, (*(Employee*) this).sueldo * 1.20);
+		}
+	}
+}
