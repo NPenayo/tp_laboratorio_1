@@ -438,6 +438,7 @@ int ll_sort(LinkedList *this, int (*pFunc)(void*, void*), int order) {
 	return returnAux;
 
 }
+
 LinkedList* ll_map(LinkedList *this, void (*fn)(void *pElement)) {
 	LinkedList *resp = NULL;
 	if (this != NULL && fn != NULL) {

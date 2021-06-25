@@ -68,6 +68,7 @@ int controller_editEmployee(LinkedList *pArrayListEmployee) {
 	int auxHoras;
 	int auxSueldo;
 	int tmpId;
+	int founded = 0;
 	Employee *aux;
 	printf("\nID del empleado: ");
 	__fpurge(stdin);
@@ -76,50 +77,53 @@ int controller_editEmployee(LinkedList *pArrayListEmployee) {
 		aux = ll_get(pArrayListEmployee, i);
 		employee_getId(aux, &tmpId);
 		if (tmpId == auxId) {
+			founded = 1;
 			break;
 		}
 	}
-	if (aux != NULL) {
-		do {
-			employee_getNombre(aux, auxNombre);
-			employee_getHorasTrabajadas(aux, &auxHoras);
-			employee_getSueldo(aux, &auxSueldo);
-			printf("\n%50s", "Modificar");
-			printf("\n*1- Nombre: %s", auxNombre);
-			printf("\n*2- Horas trabajadas: %d", auxHoras);
-			printf("\n*3- Sueldo: %d", auxSueldo);
-			printf("\n*4- Salir");
-			__fpurge(stdin);
-			if (validInt("Opcion", "Error.Opcion incorrecta", &option, 1, 4,
-			MAX_ATTEMPTS)) {
-				switch (option) {
-				case 1:
-					if (validString("Nuevo nombre",
-							"Error.El nombre no puede estar vacio o contener numeros.",
-							auxNombre, 128, MAX_ATTEMPTS)) {
-						employee_setNombre(aux, auxNombre);
-						resp = 1;
+	if (founded) {
+		if (aux != NULL) {
+			do {
+				employee_getNombre(aux, auxNombre);
+				employee_getHorasTrabajadas(aux, &auxHoras);
+				employee_getSueldo(aux, &auxSueldo);
+				printf("\n%50s", "Modificar");
+				printf("\n*1- Nombre: %s", auxNombre);
+				printf("\n*2- Horas trabajadas: %d", auxHoras);
+				printf("\n*3- Sueldo: %d", auxSueldo);
+				printf("\n*4- Salir");
+				__fpurge(stdin);
+				if (validInt("Opcion", "Error.Opcion incorrecta", &option, 1, 4,
+				MAX_ATTEMPTS)) {
+					switch (option) {
+					case 1:
+						if (validString("Nuevo nombre",
+								"Error.El nombre no puede estar vacio o contener numeros.",
+								auxNombre, 128, MAX_ATTEMPTS)) {
+							employee_setNombre(aux, auxNombre);
+
+						}
+						break;
+					case 2:
+						if (validInt("Nuevas horas",
+								"Error.Cantidad de horas invalidas", &auxHoras,
+								1, 325,
+								MAX_ATTEMPTS)) {
+							employee_setHorasTrabajadas(aux, auxHoras);
+						}
+						break;
+					case 3:
+						if (validInt("Sueldo del empleado",
+								"Error.Sueldo invalido", &auxSueldo, 10000,
+								50000, MAX_ATTEMPTS)) {
+							employee_setSueldo(aux, auxSueldo);
+						}
+						break;
 					}
-					break;
-				case 2:
-					if (validInt("Nuevas horas",
-							"Error.Cantidad de horas invalidas", &auxHoras, 1,
-							325,
-							MAX_ATTEMPTS)) {
-						employee_setHorasTrabajadas(aux, auxHoras);
-						resp = 1;
-					}
-					break;
-				case 3:
-					if (validInt("Sueldo del empleado", "Error.Sueldo invalido",
-							&auxSueldo, 10000, 50000, MAX_ATTEMPTS)) {
-						employee_setSueldo(aux, auxSueldo);
-						resp = 1;
-					}
-					break;
 				}
-			}
-		} while (!(option == 4));
+			} while (!(option == 4));
+			resp = 1;
+		}
 	}
 	return resp;
 }
@@ -140,6 +144,7 @@ int controller_removeEmployee(LinkedList *pArrayListEmployee) {
 	int tmpId;
 	int auxIndex;
 	char confirm;
+	int founded = 0;
 	Employee *temp;
 	printf("\nID del empleado: ");
 	__fpurge(stdin);
@@ -148,25 +153,28 @@ int controller_removeEmployee(LinkedList *pArrayListEmployee) {
 		temp = ll_get(pArrayListEmployee, i);
 		employee_getId(temp, &tmpId);
 		if (tmpId == auxId) {
+			founded = 1;
 			auxIndex = ll_indexOf(pArrayListEmployee, temp);
 			break;
 		}
 	}
-	if (temp != NULL) {
-		employee_getNombre(temp, auxNombre);
-		employee_getHorasTrabajadas(temp, &auxHoras);
-		employee_getSueldo(temp, &auxSueldo);
-		printf("\n¿Seguro que desea eliminar el siguiente empleado?");
-		printf("\n*Nombre: %s", auxNombre);
-		printf("\n*Horas trabajadas: %d", auxHoras);
-		printf("\n*Sueldo: %d", auxSueldo);
-		printf("\n\nConfirmar(s/n): ");
-		__fpurge(stdin);
-		scanf("%c", &confirm);
-		if (confirm == 's') {
-			ll_remove(pArrayListEmployee, auxIndex);
-			employee_delete(temp);
-			resp = 1;
+	if (founded) {
+		if (temp != NULL) {
+			employee_getNombre(temp, auxNombre);
+			employee_getHorasTrabajadas(temp, &auxHoras);
+			employee_getSueldo(temp, &auxSueldo);
+			printf("\n¿Seguro que desea eliminar el siguiente empleado?");
+			printf("\n*Nombre: %s", auxNombre);
+			printf("\n*Horas trabajadas: %d", auxHoras);
+			printf("\n*Sueldo: %d", auxSueldo);
+			printf("\n\nConfirmar(s/n): ");
+			__fpurge(stdin);
+			scanf("%c", &confirm);
+			if (confirm == 's') {
+				ll_remove(pArrayListEmployee, auxIndex);
+				employee_delete(temp);
+				resp = 1;
+			}
 		}
 	}
 	return resp;
